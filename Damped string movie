@@ -1,0 +1,79 @@
+%This program will create a movie of a damped string. To create this code,
+%we referenced the code given to us in class and modified it to model a
+%damped string. 
+
+clear;
+close all; 
+
+f = @(x) 1 - abs(2*x-1); %This is the function for the position. 
+g = @(x) 0; %This is the initial velocity, which begins at zero.
+
+n = 200; % This will break up the interval of the string from 0 to 1 into 200 subintervals. 
+dt = 0.004; %This is the timestep size. 
+tSteps = 800; %This is the number of timesteps. 
+c = 1; % c will be constant, this is the value of the string. 
+alpha = 0; %xstart yvalue. 
+beta = 0; %y end. 
+
+z = 0.05; % This is the damping constant. Zeta is the damping constant. 
+
+bounds = [0 1 -1 1]; %Bounds for the image produced. 
+dx = 1/n; %This is the spacing between x. 
+x = linspace(0, 1, n+1); %x's. 
+t = linspace(0, tSteps*dt, tSteps+1); %This defines t values. 
+p = c*dt^2/(dx^2); 
+
+u = zeros(2, length(x));
+for i = 1:n+1 % number of x points
+    u(1, i) = f(x(i)); %These are the initial conditions.
+    u(2, i) = u(1,i) + g(x(i))*dt;
+end
+
+% This is the initial frame of the movie:
+set(gcf,'color','c'); %Cool cyan background for fun! Math is fun!
+plot(x, u(1, :));
+axis(bounds); %Bounds the plot frame. 
+ttext = 't = 0'; %Timer text.
+text(0.1, 0.8, ttext); %Puts timer on the screen. 
+xlabel('x');
+ylabel('u');
+M(1) = getframe();
+
+plot(x, u(2, :));
+axis(bounds);
+ttext = strcat('t = ', num2str(t(2)));
+text(0.1, 0.8, ttext);
+xlabel('x');
+ylabel('u');
+M(2) = getframe(); %This will capture frame 2. 
+
+for m = 2:tSteps %This shows how far we have left to go. 
+    u(m+1, 1)=alpha; %This is the left position.
+    u(m+1, n+1)=beta; %This is the right position. 
+    
+    for j = 2:n
+       u(m+1, j)=(2/(2+z))*(2*u(m,j)-u(m-1, j))+((dt*z)/(2+z))*u(m-1, j)+((2*c*dt^2)/(z*dx^2+2*dx^2))*(u(m, j+1)-2*u(m,j)+u(m,j-1));
+
+    end
+    plot(x, u(m+1, :));
+    axis(bounds);
+    ttext = strcat('t = ', num2str(t(m+1)));
+    text(0.1, 0.8, ttext); %This will display a timer on the screen. 
+    xlabel('x');
+    ylabel('u');
+    M(m+1) = getframe();
+end
+
+close all;
+
+figure(1);
+contourf(x, t, u); %Contour plot shows the motion of the string throughout frames. 
+colorbar;
+xlabel('x');
+ylabel('t');
+
+figure(2);
+axis(bounds);
+xlabel('x');
+ylabel('u');
+movie(M); 
