@@ -1,0 +1,26 @@
+% The purpose of this code is to draw the curve given in the polar coordinates as: 
+%r = 1 + 2sin(theta), with two different colors signifying different loops.
+
+clear; %Clears anything left from previous projects.
+clf;
+
+numpoints = 150; %Plotting multiple points for smooth curves.
+
+%Below is the outter loop. 
+theta_outterLoop = linspace (-(pi)/6, (7*pi)/6, 101);
+r_outterLoop = 1 + 2*sin(theta_outterLoop);
+x_outterLoop = (r_outterLoop .* cos(theta_outterLoop));
+y_outterLoop = (r_outterLoop .* sin(theta_outterLoop));
+
+plot(x_outterLoop, y_outterLoop, 'k-.'); %The outter loop will be plotted in black.
+hold on; %This will not erase the first
+
+%Below is the inner loop.
+theta_innerLoop = linspace (-(5*pi)/6, -(pi)/6, 101);
+r_innerloop = 1 + 2*sin(theta_innerLoop);
+
+x_innerLoop = (r_innerloop .* cos(theta_innerLoop));
+y_innerLoop = (r_innerloop .* sin(theta_innerLoop));
+
+plot(x_innerLoop, y_innerLoop, 'm-.'); %The inner loop will be plotted in magenta.
+set(gca, 'Color','w');
