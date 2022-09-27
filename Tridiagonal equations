@@ -1,0 +1,33 @@
+% This program will solve tridiagonal equations. The value 'u' will be the solution.
+
+%Variables defined: 
+%The value 'n' is the number of rows and columns in the matrix. 
+%the value 'a' is the main diagonal. 
+%the value 'b' is the superdiagonal.
+%The value 'c' is the subdiagonal.
+
+function [u] = [Assignment name here] (a,b,c,k,n) %Including the values defined above.
+    
+    for i = 1:n
+
+        if fabs(a(i)) < 1e-6 
+            fprintf (' The main diagonal contains a zero/zeroes in the %d row.\n', i);
+            return;
+
+        else if fabs(a(i))> 1e-6
+            fprintf ('The main diagonal does not contain zeroes./n')
+
+        end
+        
+        s = c(i)/a(i); %s is the constant to zero out the subdiagonal. 
+        c(i) = c(i)-a(i)*s;
+        a(i+1) = a(i+1)-b(i)*s;
+        k(i+1) = k(i+1)-k(i)*s;
+    end
+    
+    u = zero(1, n); %u is the vector that it returns. This is the solution. 
+    u(n) = k(n)/a(n); % This will solve for the last row.
+    for i = n-1:-1:1
+        u(i) = (k(i)-b(i)*u(i+1))/a(i);
+    end
+end
